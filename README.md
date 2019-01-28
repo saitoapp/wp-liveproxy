@@ -1,7 +1,7 @@
 # wp-liveproxy
 Workplace Live Proxy container source files
 
-# How to build a container
+# How to build a Workplace Live Proxy container with your custom key/cert.
 
 1. [Install docker](https://docs.docker.com/install/)
 
@@ -11,7 +11,7 @@ git clone https://github.com/saitoapp/wp-liveproxy.git
 cd wp-liveproxy
 ```
 
-3. Workplace Live Proxy use a domain name to get all livestream traffic. For now this is a beta feature. The domain name should be a subdomain of a validated Workplace domain for security reasons. E.g: live.myvalidateddomain.com. Generate a valid key/cert pair for this domain, replacing privkey.pem and cert.pem (PEM format). Keep track of the expiration date so you can renew it before it gets expired.
+3. Workplace Live Proxy uses a domain name to receive livestream HTTP requests. For now this is a beta feature. The domain name should be a subdomain of a validated Workplace domain for security reasons. E.g.: liveproxy.myvalidateddomain.com. Generate a valid key/cert pair for this domain, replacing privkey.pem and cert.pem (PEM format). Keep track of the expiration date so you can renew it before it gets expired.
 
 4. Build a new docker image.
 ```
