@@ -1,0 +1,67 @@
+server {
+        listen 443 ssl;
+
+        resolver 8.8.8.8 8.8.4.4 ipv6=off;
+
+        # This vip will receive traffic from the user
+        # - Extract fbhost from path and use as new Host
+        # - Remove fbhost from path
+
+        ssl_certificate /etc/nginx/ssl/cert.pem;
+        ssl_certificate_key /etc/nginx/ssl/privkey.pem;
+
+        location ~* \.(mpd).* {
+            # Change hostname
+            if ($uri ~ ".*fbhost_([^\/]*)") {
+                set $newhost $1;
+            }
+
+            # Remove fbhost from path            
+            if ($uri ~ "\/fbhost_[^\/]*(.*)") {
+                set $newuri $1;
+            }
+
+            # Debug
+            #return 200 "HOST: $newhost, URI: $newuri, ARGS: $args";
+            #add_header Content-Type text/plain;
+
+            # Send rewrited request to Varnish
+            proxy_set_header Host $newhost;
+            proxy_pass https://$newhost$newuri$is_args$args;
+        }
+
+        location / {
+            proxy_set_header X-Real-IP  $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Forwarded-Port 443;
+            #proxy_set_header Host $host;
+
+            # Change hostname
+            if ($uri ~ ".*fbhost_([^\/]*)") {
+                set $newhost $1;
+            }
+
+            # Remove fbhost from path            
+            if ($uri ~ "\/fbhost_[^\/]*(.*)") {
+                set $newuri $1;
+            }
+
+            # Send rewrited request to Varnish
+            proxy_set_header Host $newhost;
+            proxy_pass http://127.0.0.1:6081$newuri$is_args$args;
+        }
+}
+
+server {
+        listen 8080;
+
+        server_name ~^(www\.)?(?<domain>.+)$;
+        resolver 8.8.8.8 8.8.4.4 ipv6=off;
+
+        location / {
+            proxy_pass https://$domain;
+            proxy_redirect off;
+            proxy_set_header Host $host;
+        }
+}
