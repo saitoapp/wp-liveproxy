@@ -11,7 +11,7 @@ git clone https://github.com/saitoapp/wp-liveproxy.git
 cd wp-liveproxy
 ```
 
-3. Workplace Live Proxy uses a domain name to receive livestream HTTP requests. For now this is a beta feature. The domain name should be a subdomain of a validated Workplace domain for security reasons. E.g.: liveproxy.myvalidateddomain.com. Generate a valid key/cert pair for this domain, replacing privkey.pem and cert.pem (PEM format). Keep track of the expiration date so you can renew it before it gets expired.
+3. Workplace Live Proxy uses a domain name to receive livestream HTTP requests. For now this is a beta feature. The domain name should be a subdomain of a validated Workplace domain for security reasons. E.g.: liveproxy.myvalidateddomain.com. It is possible to add your valid key/cert pair for your domain, replacing privkey.pem and cert.pem (PEM format). If you do, keep track of the expiration date so you can renew it before it gets expired. Some people like to use SECRETS as a secure way to provide the container the cert/key pair.
 
 4. Build a new docker image.
 ```
